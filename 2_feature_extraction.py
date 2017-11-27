@@ -61,11 +61,10 @@ for i in list_train_flat:
     vid = skio.vread(join(path_data,i), as_grey=True, outputdict={'-sws_flags': 'bilinear', '-s': str(norm_width)+'x'+str(norm_height)})
     fr, ht, wd, ch = vid.shape
     # Reshape the data
-    a = []
-    for j in range(fr):
-        image = vid[j].reshape(ht, wd, ch)
-        a.append([image, ht, wd, ch, int(i[0:3])])
-    label_train.append(a)
+    for j in vid:
+        image = j.reshape(ht, wd, ch)
+        label_train.append([image, ht, wd, ch, int(i[0:3])])
+label_train = np.array(label_train)
     
 # Take out labels for validation set
 label_val = []
@@ -73,11 +72,10 @@ for i in list_val:
     vid = skio.vread(join(path_data,i), as_grey=True, outputdict={'-sws_flags': 'bilinear', '-s': str(norm_width)+'x'+str(norm_height)})
     fr, ht, wd, ch = vid.shape
     # Reshape the data
-    a = []
-    for j in range(fr):
-        image = vid[j].reshape(ht, wd, ch)
-        a.append([image, ht, wd, ch, int(i[0:3])])
-    label_val.append(a)
+    for j in vid:
+        image = j.reshape(ht, wd, ch)
+        label_val.append([image, ht, wd, ch, int(i[0:3])])
+label_val = np.array(label_val)
 
 # Take out labels for test set
 label_test = []
@@ -85,62 +83,58 @@ for i in list_test:
     vid = skio.vread(join(path_data,i), as_grey=True, outputdict={'-sws_flags': 'bilinear', '-s': str(norm_width)+'x'+str(norm_height)})
     fr, ht, wd, ch = vid.shape
     # Reshape the data
-    a = []
-    for j in range(fr):
-        image = vid[j].reshape(ht, wd, ch)
-        a.append([image, ht, wd, ch, int(i[0:3])])
-    label_test.append(a)
+    for j in vid:
+        image = j.reshape(ht, wd, ch)
+        label_test.append([image, ht, wd, ch, int(i[0:3])])
+label_test = np.array(label_test)
 
 # HOG features for training set
 hog_train = []
 count = 0
-for i in label_train:
+for i in label_train[:,0]:
     count += 1
     print count ########################
-    for j,_ in i[:][:][0]:
-        if count == 1:
-            print j
-        image = j.reshape(norm_height,norm_width)
-        feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
-                      cells_per_block=(1,1), block_norm='L2', visualise=True)
+    image = i.reshape(norm_height,norm_width)
+    feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
+                  cells_per_block=(1,1), block_norm='L2', visualise=True)
     hog_train.append(feats.tolist())
 
 # HOG features for validation set
 hog_val = []
-for i in label_val:
+count = 0
+for i in label_val[:,0]:
     count += 1
     print count ########################
-    for j in i[:][:][0]:
-        image = j.reshape(norm_height,norm_width)
-        feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
-                      cells_per_block=(1,1), block_norm='L2', visualise=True)
+    image = i.reshape(norm_height,norm_width)
+    feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
+                  cells_per_block=(1,1), block_norm='L2', visualise=True)
     hog_val.append(feats.tolist())
 
 # HOG features for test set   
 hog_test = []
-for i in label_test:
+count = 0
+for i in label_test[:,0]:
     count += 1
     print count ########################
-    for j in i[:][:][0]:
-        image = j.reshape(norm_height,norm_width)
-        feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
-                      cells_per_block=(1,1), block_norm='L2', visualise=True)
+    image = j.reshape(norm_height,norm_width)
+    feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
+                  cells_per_block=(1,1), block_norm='L2', visualise=True)
     hog_test.append(feats.tolist())
     
-'''    
+   
 # SVM
 # Data
 data_train = np.array(hog_train)
 data_val = np.array(hog_val)
 data_test = np.array(hog_test)
 # Labels
-lbl_train = np.array([i[:][4] for i in label_train]).ravel()
-lbl_val = np.array([i[:][4] for i in label_val]).ravel()
-lbl_test = np.array([i[:][4] for i in label_test]).ravel()
+lbl_train = np.array([i for i in label_train[:, 4]]).ravel()
+lbl_val = np.array([i for i in label_val[:, 4]]).ravel()
+lbl_test = np.array([i for i in label_test[:, 4]]).ravel()
 
 # Linear kernel
 # Training the model
-svm_lin = svm.SVC(kernel='linear', C=1.0, cache_size=4096)
+svm_lin = svm.SVC(kernel='linear', C=1.0, probability=True, cache_size=4096)
 fit_lin = svm_lin.fit(data_train,lbl_train)
 
 # Validate the model
@@ -154,9 +148,9 @@ acc_test = r2_score(lbl_test,pred_test)*100
 print 'Test accuracy -> ' + str(acc_test)
 
 # Sensitivity and specificity
-t, f = 0,0
+t, f = 0.0,0.0
 for i in range(len(lbl_test)):
-    if lbl_test[i] == pred_test[i]:
+    if (lbl_test[i] == pred_test[i]):
         t += 1
     else:
         f += 1
@@ -164,4 +158,3 @@ sens = float(t/len(lbl_test))
 spec = float(f/len(lbl_test))
 print 'Test sensitivity -> ' + str(sens)
 print 'Test specificity -> ' + str(spec)
-'''
