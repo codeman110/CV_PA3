@@ -30,8 +30,12 @@ feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
    - cache_size=4096
 A sample of SVM code using linear kernel:
 ```python
+# Training the model
 svm_lin = svm.SVC(kernel='linear', C=1.0, probability=True, cache_size=4096)
 fit_lin = svm_lin.fit(data_train,lbl_train)
+
+# Testing the model
+pred_test = svm_lin.predict(data_test)
 ```
    
 6. Specificity, sensitivity and accuracy are obtained after testing the data.
