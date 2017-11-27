@@ -17,7 +17,7 @@ Notes:
    - pixels_per_cell=(8,8)
    - cells_per_block=(1,1)
    - block_norm='L2'
-A sample of HoG code:
+
 '''python
 feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
               cells_per_block=(1,1), block_norm='L2', visualise=True)
@@ -28,7 +28,7 @@ feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
    - C=1.0
    - probability=True
    - cache_size=4096
-A sample of SVM code:
+
 '''python
 svm_lin = svm.SVC(kernel='linear', C=1.0, probability=True, cache_size=4096)
 fit_lin = svm_lin.fit(data_train,lbl_train)
