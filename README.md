@@ -6,13 +6,27 @@ Steps:
 3. Run the 1_preprocessing.py to copy the videos into a new folder followed by 2_feature_extraction.py.
 
 Notes:
-1. **Run the 1_preprocessing.py only once.** This file will copy all the videos from the original dataset directory to new directory. It creates videos from images and where images are not availble, it copies the video. It will rename the videos in the new directory in the format  xxx_yyy.avi where xxx is the class number (ranging from 000-012) and yyy is the video number in that partcular class. This format is used to avoid cration of a separate csv file where information of video and their labels are kept. The imageio library is used to convert images to video file.
+1. Libraries used
+```python
+import imageio
+import numpy as np
+from sklearn import svm
+from shutil import copy2
+from random import sample
+import skvideo.io as skio
+from skimage.feature import hog
+from os import listdir, makedirs
+from sklearn.metrics import r2_score
+from os.path import join, isdir, exists
+```
+
+2. **Run the 1_preprocessing.py only once.** This file will copy all the videos from the original dataset directory to new directory. It creates videos from images and where images are not availble, it copies the video. It will rename the videos in the new directory in the format  xxx_yyy.avi where xxx is the class number (ranging from 000-012) and yyy is the video number in that partcular class. This format is used to avoid cration of a separate csv file where information of video and their labels are kept. The imageio library is used to convert images to video file.
 	
-2. We are considering 13 classes as given in the directory of UCF Sports Action Data Set instead of 10 classes.
+3. We are considering 13 classes as given in the directory of UCF Sports Action Data Set instead of 10 classes.
 
-3. From each of the 13 action classes a video is chosen randomly to be used as test data.
+4. From each of the 13 action classes a video is chosen randomly to be used as test data.
 
-4. Histogram of Gradients is used to extract features from the images. To decrease the computation time, videos are resized to 120x90 and greyscale channel is used. The parameters of HoG are
+5. Histogram of Gradients is used to extract features from the images. To decrease the computation time, videos are resized to 120x90 and greyscale channel is used. The parameters of HoG are
    - orientations=9
    - pixels_per_cell=(8,8)
    - cells_per_block=(1,1)
@@ -22,7 +36,7 @@ feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
               cells_per_block=(1,1), block_norm='L2', visualise=True)
 ```
 
-5. The SVM classifier is used to classification. Linear kernel is used. The following parametes are used
+6. The SVM classifier is used to classification. Linear kernel is used. The following parametes are used
    - kernel='linear'
    - C=1.0
    - probability=True
@@ -36,7 +50,7 @@ fit_lin = svm_lin.fit(data_train,lbl_train)
 pred_test = svm_lin.predict(data_test)
 ```
    
-6. Specificity, sensitivity and accuracy are obtained after testing the data.
+7. Specificity, sensitivity and accuracy are obtained after testing the data.
 ```python
 # Sensitivity, specificity and accuracy
 t, f = 0.0,0.0
