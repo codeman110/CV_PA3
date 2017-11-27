@@ -17,7 +17,6 @@ Notes:
    - pixels_per_cell=(8,8)
    - cells_per_block=(1,1)
    - block_norm='L2'
-A sample of HoG code:
 ```python
 feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
               cells_per_block=(1,1), block_norm='L2', visualise=True)
@@ -28,7 +27,6 @@ feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
    - C=1.0
    - probability=True
    - cache_size=4096
-A sample of SVM code using linear kernel:
 ```python
 # Training the model
 svm_lin = svm.SVC(kernel='linear', C=1.0, probability=True, cache_size=4096)
@@ -39,3 +37,15 @@ pred_test = svm_lin.predict(data_test)
 ```
    
 6. Specificity, sensitivity and accuracy are obtained after testing the data.
+```python
+# Sensitivity and specificity
+t, f = 0.0,0.0
+for i in range(len(lbl_test)):
+    if (lbl_test[i] == pred_test[i]):
+        t += 1
+    else:
+        f += 1
+sens = float(t/len(lbl_test))
+spec = float(f/len(lbl_test))
+acc_test = r2_score(lbl_test,pred_test)*100
+```
