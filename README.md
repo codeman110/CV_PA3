@@ -27,10 +27,10 @@ from os.path import join, isdir, exists
 4. From each of the 13 action classes a video is chosen randomly to be used as test data.
 
 5. Histogram of Gradients is used to extract features from the images. To decrease the computation time, videos are resized to 120x90 and greyscale channel is used. The parameters of HoG are
-   - orientations=9
-   - pixels_per_cell=(8,8)
-   - cells_per_block=(1,1)
-   - block_norm='L2'
+   - orientations -> Number of orientation bins.
+   - pixels_per_cell -> Size (in pixels) of a cell
+   - cells_per_block -> Number of cells in each block
+   - block_norm -> Block normalization method
 ```python
 feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
               cells_per_block=(1,1), block_norm='L2', visualise=True)
