@@ -1,5 +1,5 @@
 # INCOMPLETE
-# CV - PA3
+# COMPUTER VISION - PROGRAMMING ASSIGNMENT 3
 Steps:
 1. Download the [UCF Sports Action Data Set](http://crcv.ucf.edu/data/ucf_sports_actions.zip).
 2. Extract the zip file in the same folder as the python files.
@@ -38,7 +38,7 @@ pred_test = svm_lin.predict(data_test)
    
 6. Specificity, sensitivity and accuracy are obtained after testing the data.
 ```python
-# Sensitivity and specificity
+# Sensitivity, specificity and accuracy
 t, f = 0.0,0.0
 for i in range(len(lbl_test)):
     if (lbl_test[i] == pred_test[i]):
