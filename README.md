@@ -6,7 +6,7 @@ Steps:
 3. Run the 1_preprocessing.py to copy the videos into a new folder followed by 2_feature_extraction.py.
 
 Notes:
-1. Run the 1_preprocessing.py only once. This file will copy all the videos from the original dataset directory to new directory. It creates videos from images and where images are not availble, it copies the video. It will rename the videos in the new directory in the format  xxx_yyy.avi where xxx is the class number (ranging from 000-012) and yyy is the video number in that partcular class. This format is used to avoid cration of a separate csv file where information of video and their labels are kept. The imageio library is used to convert images to video file.
+1. **Run the 1_preprocessing.py only once.** This file will copy all the videos from the original dataset directory to new directory. It creates videos from images and where images are not availble, it copies the video. It will rename the videos in the new directory in the format  xxx_yyy.avi where xxx is the class number (ranging from 000-012) and yyy is the video number in that partcular class. This format is used to avoid cration of a separate csv file where information of video and their labels are kept. The imageio library is used to convert images to video file.
 	
 2. We are considering 13 classes as given in the directory of UCF Sports Action Data Set instead of 10 classes.
 
