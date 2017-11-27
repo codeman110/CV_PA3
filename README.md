@@ -13,15 +13,15 @@ Notes:
 3. From each of the 13 action classes a video is chosen randomly to be used as test data.
 
 4. Histogram of Gradients is used to extract features from the images. To decrease the computation time, videos are resized to 90x120 and greyscale channel is used. The parameters of HoG are
-- orientations=9
-- pixels_per_cell=(8,8)
-- cells_per_block=(1,1)
-- block_norm='L2'
+   - orientations=9
+   - pixels_per_cell=(8,8)
+   - cells_per_block=(1,1)
+   - block_norm='L2'
 
 5. The SVM classifier is used to classification. The following parametes are used
-- kernel='linear'
-- C=1.0
-- probability=True
-- cache_size=4096
+   - kernel='linear'
+   - C=1.0
+   - probability=True
+   - cache_size=4096
    
 6. Specificity, sensitivity and accuracy are obtained after testing the data.
