@@ -12,7 +12,7 @@ Notes:
 
 3. From each of the 13 action classes a video is chosen randomly to be used as test data.
 
-4. Histogram of Gradients is used to extract features from the images. To decrease the computation time, videos are resized to 90x120 and greyscale channel is used. The parameters of HoG are
+4. Histogram of Gradients is used to extract features from the images. To decrease the computation time, videos are resized to 120x90 and greyscale channel is used. The parameters of HoG are
    - orientations=9
    - pixels_per_cell=(8,8)
    - cells_per_block=(1,1)
