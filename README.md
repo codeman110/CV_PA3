@@ -40,7 +40,7 @@ vid = skio.vread(join(path_data,i),
                  as_grey=True,
 		 outputdict={'-sws_flags': 'bilinear', '-s': str(norm_width)+'x'+str(norm_height)})
 ```
-4. Histogram of Gradients is used to extract features from the images. To decrease the computation time, videos are resized to 120x90 and grayscale channel is used. The parameters of HoG are
+6. Histogram of Gradients is used to extract features from the images. To decrease the computation time, videos are resized to 120x90 and grayscale channel is used. The parameters of HoG are
    - orientations -> Number of orientation bins.
    - pixels_per_cell -> Size (in pixels) of a cell
    - cells_per_block -> Number of cells in each block
@@ -49,11 +49,11 @@ vid = skio.vread(join(path_data,i),
 feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
               cells_per_block=(1,1), block_norm='L2', visualise=True)
 ```
-5. The SVM classifier is used to classification. Linear kernel is used. The following parametes are used
-   - kernel='linear'
-   - C=1.0
-   - probability=True
-   - cache_size=4096
+7. The SVM classifier is used to classification. The following parametes are used
+   - kernel -> Specifies the kernel type to be used in the algorithm. Here linear kernel is used. 
+   - C -> Penalty parameter C of the error term.
+   - probability -> Whether to enable probability estimates.
+   - cache_size= -> Specify the size of the kernel cache (in MB).
 ```python
 # Training the model
 svm_lin = svm.SVC(kernel='linear', C=1.0, probability=True, cache_size=4096)
@@ -62,10 +62,10 @@ fit_lin = svm_lin.fit(data_train,lbl_train)
 # Testing the model
 pred_test = svm_lin.predict(data_test)
 ```
-6. The Leave-one-out (LOO) cross-validation scheme is used. This scenario takes out one sample video for testing and trains using all of the remaining videos of an action class. This is performed for every sample video in a cyclic manner, and the overall accuracy is obtained by averaging the accuracy of all iterations.
+8. The Leave-one-out (LOO) cross-validation scheme is used. This scenario takes out one sample video for testing and trains using all of the remaining videos of an action class. This is performed for every sample video in a cyclic manner, and the overall accuracy is obtained by averaging the accuracy of all iterations.
 Here the ```MAX_ITR``` defines the number of epochs the SVM should run. Since there are 150 videos, the SVM should run 150 times if LOO cross-validation scheme is used. The disadvantage is that it takes a lot of time (8.9 hours approx.). We ran the SVM for 10 times.
 
-7. Specificity, sensitivity and accuracy are obtained after testing the data.
+9. Specificity, sensitivity and accuracy are obtained after testing the data.
 ```python
 # Sensitivity, specificity and accuracy
 t, f = 0.0,0.0
