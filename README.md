@@ -1,10 +1,17 @@
-# INCOMPLETE
 # COMPUTER VISION - PROGRAMMING ASSIGNMENT 3
 ## Action Recognition using Support Vector Machines
 Steps:
 1. Download the [UCF Sports Action Data Set](http://crcv.ucf.edu/data/ucf_sports_actions.zip).
 2. Extract the zip file in the same folder as the python files.
 3. Run the 1_preprocessing.py to copy the videos into a new folder followed by 2_feature_extraction.py.
+
+Data structures:
+1. We used ```skvideo.io``` library to extract frames from videos. A dataset of frames and their labels are created in the following manner. We created a list of list of lists to hold the data. The innermost list contains all the frames of a particular video. The outer list contain the label and the innermost list. The outermost list contains a list of previous list. So basically the outermost list represents all the 150 videos.
+
+2. The HoG dataset is also created in the same manner. It is also a list of list of lists. Only difference is that, the innermost list contains HoG representaions of frames insted of frames.
+
+3. Just before the HoG features are fed into the classifier, the dataset is again restructured. This time the innermost list of the HoG features of videos are put in a vertical stack. Basically it is numpy array. If the first video has 55 frames and the second one has 60, the dataset will have 55 HoG features of the first video followed by 60 features of second one and so on. The features are stacked vertically. The labels are also created in such a manner so that it will correspond to the HoG features. In this case, it will be list containing 55 labels of the first video followed by 60 of second one and so on.
+
 
 Notes:
 1. Libraries used
@@ -13,8 +20,8 @@ import imageio
 import numpy as np
 from sklearn import svm
 from shutil import copy2
-from random import sample
 import skvideo.io as skio
+from random import shuffle
 from skimage.feature import hog
 from os import listdir, makedirs
 from sklearn.metrics import r2_score
@@ -25,6 +32,14 @@ from os.path import join, isdir, exists
 	
 3. We are considering 13 classes as given in the directory of UCF Sports Action Data Set instead of 10 classes.
 
+4. Shuffle the dataset.
+
+5. Extract frames from videos.
+```python
+vid = skio.vread(join(path_data,i),
+                 as_grey=True,
+		 outputdict={'-sws_flags': 'bilinear', '-s': str(norm_width)+'x'+str(norm_height)})
+```
 4. Histogram of Gradients is used to extract features from the images. To decrease the computation time, videos are resized to 120x90 and grayscale channel is used. The parameters of HoG are
    - orientations -> Number of orientation bins.
    - pixels_per_cell -> Size (in pixels) of a cell
@@ -48,7 +63,8 @@ fit_lin = svm_lin.fit(data_train,lbl_train)
 pred_test = svm_lin.predict(data_test)
 ```
 6. The Leave-one-out (LOO) cross-validation scheme is used. This scenario takes out one sample video for testing and trains using all of the remaining videos of an action class. This is performed for every sample video in a cyclic manner, and the overall accuracy is obtained by averaging the accuracy of all iterations.
-Here the ```python MAX_ITR``` defines the number of epochs the SVM should run. Since there are 150 videos, the SVM should run 150 times if LOO cross-validation scheme is used. The disadvantage is that it takes a lot of time (8.9 hours approx.). We ran the SVM for 10 times.
+Here the ```MAX_ITR``` defines the number of epochs the SVM should run. Since there are 150 videos, the SVM should run 150 times if LOO cross-validation scheme is used. The disadvantage is that it takes a lot of time (8.9 hours approx.). We ran the SVM for 10 times.
+
 7. Specificity, sensitivity and accuracy are obtained after testing the data.
 ```python
 # Sensitivity, specificity and accuracy
@@ -62,3 +78,4 @@ sens = float(t/len(lbl_test))
 spec = float(f/len(lbl_test))
 acc_test = r2_score(lbl_test,pred_test)*100
 ```
+After executing the SVM for ```MAX_ITR``` times, the average accuracy, sensitivity and specificity is calculated.
