@@ -25,9 +25,7 @@ from os.path import join, isdir, exists
 	
 3. We are considering 13 classes as given in the directory of UCF Sports Action Data Set instead of 10 classes.
 
-4. From each of the 13 action classes a video is chosen randomly to be used as test data.
-
-5. Histogram of Gradients is used to extract features from the images. To decrease the computation time, videos are resized to 120x90 and grayscale channel is used. The parameters of HoG are
+4. Histogram of Gradients is used to extract features from the images. To decrease the computation time, videos are resized to 120x90 and grayscale channel is used. The parameters of HoG are
    - orientations -> Number of orientation bins.
    - pixels_per_cell -> Size (in pixels) of a cell
    - cells_per_block -> Number of cells in each block
@@ -36,8 +34,7 @@ from os.path import join, isdir, exists
 feats,_ = hog(image, orientations=9, pixels_per_cell=(8,8),
               cells_per_block=(1,1), block_norm='L2', visualise=True)
 ```
-
-6. The SVM classifier is used to classification. Linear kernel is used. The following parametes are used
+5. The SVM classifier is used to classification. Linear kernel is used. The following parametes are used
    - kernel='linear'
    - C=1.0
    - probability=True
@@ -50,7 +47,8 @@ fit_lin = svm_lin.fit(data_train,lbl_train)
 # Testing the model
 pred_test = svm_lin.predict(data_test)
 ```
-   
+6. The Leave-one-out (LOO) cross-validation scheme is used. This scenario takes out one sample video for testing and trains using all of the remaining videos of an action class. This is performed for every sample video in a cyclic manner, and the overall accuracy is obtained by averaging the accuracy of all iterations.
+Here the ```python MAX_ITR``` defines the number of epochs the SVM should run. Since there are 150 videos, the SVM should run 150 times if LOO cross-validation scheme is used. The disadvantage is that it takes a lot of time (8.9 hours approx.). We ran the SVM for 10 times.
 7. Specificity, sensitivity and accuracy are obtained after testing the data.
 ```python
 # Sensitivity, specificity and accuracy
