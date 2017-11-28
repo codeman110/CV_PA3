@@ -41,7 +41,7 @@ vid = skio.vread(join(path_data,i),
                  as_grey=True,
 		 outputdict={'-sws_flags': 'bilinear', '-s': str(norm_width)+'x'+str(norm_height)})
 ```
-6. Histogram of Gradients is used to extract features from the images. To decrease the computation time, videos are resized to 120x90 and grayscale channel is used. The parameters of HoG are
+6. Histogram of Gradients is used to extract features from the images. HoG is favored over SIFT because HoG extracts global features while SIFT extract local features. HoG is useful action recognition, whereas SIFT is used for action localization. To decrease the computation time, videos are resized to 120x90 and grayscale channel is used. The parameters of HoG are
    - orientations -> Number of orientation bins.
    - pixels_per_cell -> Size (in pixels) of a cell
    - cells_per_block -> Number of cells in each block
