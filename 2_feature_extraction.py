@@ -15,8 +15,8 @@ MAX_ITER = 10 # Number of instances to run the Leave-one-out
 # Create a list of videos
 list_data = [i for i in sorted(listdir(path_data))]
 
-norm_width = 120 #min(width)
-norm_height = 90 #min(height)
+norm_width = 120 # Normalised width
+norm_height = 90 # Normalised height
 
 # Shuffle the dataset
 shuffle(list_data)
@@ -61,7 +61,7 @@ total_spec = 0
 for i in range(MAX_ITER):
     print '~'*100
     print 'Epoch - %d' % (i)
-    # Data Restructure
+    # Restructure the data and labels
     data_train = []
     data_test = []
     label_train = []
