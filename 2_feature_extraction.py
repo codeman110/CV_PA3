@@ -1,17 +1,16 @@
 from os import listdir
 from os.path import join
-from random import sample, shuffle
+from random import shuffle
 import numpy as np
-import imageio
 import skvideo.io as skio
 from skimage.feature import hog
 from sklearn import svm
-from sklearn.metrics import r2_score,accuracy_score
-from sklearn.model_selection import LeaveOneOut
+from sklearn.metrics import r2_score
 import time
 
 # Data path
 path_data = 'video'
+MAX_ITER = 10 # Number of instances to run the Leave-one-out
 
 # Create a list of videos
 list_data = [i for i in sorted(listdir(path_data))]
@@ -55,16 +54,11 @@ for i in list_labelled_frames:
     t1.append(np.array(t2))
     list_hog.append(t1)
     
-# Splitting features to train and test using leave-one-out cross-validation
-loo = LeaveOneOut()
-loo_train = []
-loo_test = []
-for train, test in loo.split(list_hog):
-    loo_train.append(np.array(train))
-    loo_test.append(int(test))
-
 # SVM
-for i in loo_test:
+total_acc = 0
+total_sens = 0
+total_spec = 0
+for i in range(MAX_ITER):
     print '~'*100
     print 'Epoch - %d' % (i)
     # Data Restructure
@@ -94,14 +88,10 @@ for i in loo_test:
     svm_lin = svm.SVC(kernel='linear', C=1.0, probability=True, cache_size=4096)
     fit_lin = svm_lin.fit(data_train,label_train)
     stop = time.time()
-    print 'Time take to train -> %d' % (stop-start)
+    print 'Time taken to train -> %d' % (stop-start)
     
     # Testing the model
-    start = time.time()
     pred_test = svm_lin.predict(data_test)
-    start = time.time()
-    print 'Time take to test -> %d' % (stop-start)
-    #acc_test = accuracy_score(lbl_test,pred_test)
     acc_test = r2_score(label_test,pred_test)*100
     print 'Test accuracy -> ' + str(acc_test)
     
@@ -116,3 +106,9 @@ for i in loo_test:
     spec = float(f/len(label_test))
     print 'Test sensitivity -> ' + str(sens)
     print 'Test specificity -> ' + str(spec)
+    total_acc += acc_test
+    total_sens += sens
+    total_spec += spec
+print 'Average test accuracy -> ' + str(total_acc/MAX_ITER)
+print 'Average test sensitivity -> ' + str(total_sens/MAX_ITER)
+print 'Average test specificity -> ' + str(total_spec/MAX_ITER)
