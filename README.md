@@ -8,7 +8,7 @@ Steps:
 Data structures:
 1. We used ```skvideo.io``` library to extract frames from videos. A dataset of frames and their labels are created in the following manner. We created a list of list of lists to hold the data. The innermost list contains all the frames of a particular video. The outer list contains the label and the innermost list. The outermost list contains a list of previous list. So basically the outermost list represents all the 150 videos.
 
-2. The HoG dataset is also created in the same manner. It is also a list of list of lists. Only difference is that, the innermost list contains HoG representaions of frames insted of frames.
+2. The HoG dataset is also created in the same manner. It is also a list of list of lists. Only difference is that, the innermost list contains HoG representaions of frames instead of frames.
 
 3. Just before the HoG features are fed into the classifier, the dataset is again restructured. This time the innermost list of the HoG features of videos are put in a vertical stack. Basically it is numpy array. If the first video has 55 frames and the second one has 60, the dataset will have 55 HoG features of the first video followed by 60 features of second one and so on. The features are stacked vertically. The labels are also created in such a manner so that it will correspond to the HoG features. In this case, it will be list containing 55 labels of the first video followed by 60 of second one and so on.
 
