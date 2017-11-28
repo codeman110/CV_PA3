@@ -1,5 +1,6 @@
 # INCOMPLETE
 # COMPUTER VISION - PROGRAMMING ASSIGNMENT 3
+## Action Recognition using Support Vector Machines
 Steps:
 1. Download the [UCF Sports Action Data Set](http://crcv.ucf.edu/data/ucf_sports_actions.zip).
 2. Extract the zip file in the same folder as the python files.
