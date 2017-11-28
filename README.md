@@ -16,6 +16,7 @@ Data structures:
 Notes:
 1. Libraries used
 ```python
+import time
 import imageio
 import numpy as np
 from sklearn import svm
