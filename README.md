@@ -3,7 +3,7 @@
 Steps:
 1. Download the [UCF Sports Action Data Set](http://crcv.ucf.edu/data/ucf_sports_actions.zip).
 2. Extract the zip file in the same folder as the python files.
-3. Run the 1_preprocessing.py to copy the videos into a new folder followed by 2_feature_extraction.py.
+3. Run the 1_preprocessing.py **(only once)** to copy the videos into a new folder followed by 2_feature_extraction.py.
 
 Data structures:
 1. We used ```skvideo.io``` library to extract frames from videos. A dataset of frames and their labels are created in the following manner. We created a list of list of lists to hold the data. The innermost list contains all the frames of a particular video. The outer list contains the label and the innermost list. The outermost list contains a list of previous list. So basically the outermost list represents all the 150 videos.
